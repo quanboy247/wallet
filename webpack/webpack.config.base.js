@@ -96,6 +96,8 @@ const config = {
     alias: aliases,
     fallback: {
       crypto: require.resolve('crypto-browserify'),
+      http: require.resolve('stream-http'),
+      https: require.resolve('https-browserify'),
       stream: require.resolve('stream-browserify'),
       vm: require.resolve('vm-browserify'),
       assert: require.resolve('assert'),

@@ -10,3 +10,4 @@ export const IS_TEST_ENV = process.env.TEST_ENV === 'true';
 export const SEGMENT_WRITE_KEY = process.env.SEGMENT_WRITE_KEY ?? '';
 export const SENTRY_DSN = process.env.SENTRY_DSN ?? '';
 export const TRANSAK_API_KEY = process.env.TRANSAK_API_KEY ?? '';
+export const BLOCKDAEMON_API_KEY = process.env.BLOCKDAEMON_API_KEY ?? '';
