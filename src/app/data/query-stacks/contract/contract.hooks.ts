@@ -3,7 +3,7 @@ import type { TransactionPayload } from '@stacks/connect';
 import { ContractInterfaceFunction } from '@stacks/rpc-client';
 
 import { ContractInterfaceResponseWithFunctions } from '@shared/models/contract-types';
-import { useGetContractInterface } from '@app/query/contract/contract.query';
+import { useGetContractInterface } from '@app/data/query-stacks/contract/contract.query';
 import { useContractInterfaceState } from '@app/store/contracts/contract.hooks';
 import { useTransactionRequestState } from '@app/store/transactions/requests.hooks';
 import { formatContractId } from '@app/common/utils';

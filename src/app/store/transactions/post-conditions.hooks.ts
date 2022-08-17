@@ -1,7 +1,7 @@
 import { addressToString, FungiblePostCondition } from '@stacks/transactions';
 import { ContractCallPayload, ContractDeployPayload, STXTransferPayload } from '@stacks/connect';
 
-import { useFungibleTokenMetadata } from '@app/query/fungible-tokens/fungible-token-metadata.hooks';
+import { useFungibleTokenMetadata } from '@app/data/query-stacks/fungible-tokens/fungible-token-metadata.hooks';
 import { useTransactionRequestState } from './requests.hooks';
 import { useCurrentAccountStxAddressState } from '../accounts/account.hooks';
 

@@ -3,10 +3,10 @@ import BigNumber from 'bignumber.js';
 
 import { microStxToStx, validateStacksAddress } from '@app/common/stacks-utils';
 import { TransactionErrorReason } from '@app/pages/transaction-request/components/transaction-error/transaction-error';
-import { useContractInterface } from '@app/query/contract/contract.hooks';
+import { useContractInterface } from '@app/data/query-stacks/contract/contract.hooks';
 import { TransactionTypes } from '@stacks/connect';
 import { useCurrentAccount } from '@app/store/accounts/account.hooks';
-import { useCurrentAccountAvailableStxBalance } from '@app/query/balance/balance.hooks';
+import { useCurrentAccountAvailableStxBalance } from '@app/data/query-stacks/balance/balance.hooks';
 
 import {
   useTransactionBroadcastError,

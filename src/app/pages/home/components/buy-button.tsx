@@ -4,7 +4,7 @@ import { FiPlus } from 'react-icons/fi';
 import { ChainID } from '@stacks/transactions';
 import { ButtonProps } from '@stacks/ui';
 
-import { useHasFiatProviders } from '@app/query/hiro-config/hiro-config.query';
+import { useHasFiatProviders } from '@app/data/query-stacks/hiro-config/hiro-config.query';
 import { useCurrentNetworkState } from '@app/store/network/networks.hooks';
 import { RouteUrls } from '@shared/route-urls';
 import { HomePageSelectors } from '@tests/page-objects/home.selectors';

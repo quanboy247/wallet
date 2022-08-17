@@ -1,6 +1,6 @@
 import { Box, Flex, FlexProps } from '@stacks/ui';
 
-import { useRemoteHiroMessages } from '@app/query/hiro-config/hiro-config.query';
+import { useRemoteHiroMessages } from '@app/data/query-stacks/hiro-config/hiro-config.query';
 import { HiroMessageItem } from './components/hiro-message-item';
 import { useCurrentNetwork } from '@app/common/hooks/use-current-network';
 

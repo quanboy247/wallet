@@ -7,7 +7,7 @@ import { getUrlHostname } from '@app/common/utils';
 import { Box, BoxProps, color, Flex, Stack } from '@stacks/ui';
 import { useUpdateCurrentNetworkKey } from '@app/store/network/networks.hooks';
 import { NetworkStatusIndicator } from './components/network-status-indicator';
-import { useNetworkStatus } from '@app/query/network/network.hooks';
+import { useNetworkStatus } from '@app/data/query-stacks/network/network.hooks';
 import { useAnalytics } from '@app/common/hooks/analytics/use-analytics';
 
 interface NetworkListItemProps extends BoxProps {

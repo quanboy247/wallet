@@ -4,7 +4,7 @@ import {
   MempoolTransaction,
 } from '@stacks/stacks-blockchain-api-types';
 
-import { useTransactionsById } from '@app/query/transactions/transactions-by-id.query';
+import { useTransactionsById } from '@app/data/query-stacks/transactions/transactions-by-id.query';
 import { useCurrentAccountStxAddressState } from '@app/store/accounts/account.hooks';
 import { logger } from '@shared/logger';
 

@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js';
 import { AssetWithMeta } from '@app/common/asset-types';
 import { getFullyQualifiedAssetName, getTicker, initBigNumber } from '@app/common/utils';
 import { ftDecimals, stacksValue } from '@app/common/stacks-utils';
-import { useCurrentAccountAvailableStxBalance } from '@app/query/balance/balance.hooks';
+import { useCurrentAccountAvailableStxBalance } from '@app/data/query-stacks/balance/balance.hooks';
 import { useSelectedAssetItem, useUpdateSelectedAsset } from '@app/store/assets/asset.hooks';
 import { useAnalytics } from '@app/common/hooks/analytics/use-analytics';
 

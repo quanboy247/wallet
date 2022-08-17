@@ -11,7 +11,7 @@ import { useDrawers } from '@app/common/hooks/use-drawers';
 import { useAnalytics } from '@app/common/hooks/analytics/use-analytics';
 import { useHandleSubmitTransaction } from '@app/common/hooks/use-submit-stx-transaction';
 import { TransactionFormValues } from '@app/common/transactions/transaction-utils';
-import { useNextNonce } from '@app/query/nonce/account-nonces.hooks';
+import { useNextNonce } from '@app/data/query-stacks/nonce/account-nonces.hooks';
 import { Header } from '@app/components/header';
 import { useWalletType } from '@app/common/use-wallet-type';
 import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigate';
@@ -19,7 +19,7 @@ import { EditNonceDrawer } from '@app/features/edit-nonce-drawer/edit-nonce-draw
 import { HighFeeDrawer } from '@app/features/high-fee-drawer/high-fee-drawer';
 import { useSelectedAsset } from '@app/pages/send-tokens/hooks/use-selected-asset';
 import { useSendFormValidation } from '@app/pages/send-tokens/hooks/use-send-form-validation';
-import { useFeeEstimations } from '@app/query/fees/fees.hooks';
+import { useFeeEstimations } from '@app/data/query-stacks/fees/fees.hooks';
 import {
   useGenerateSendFormUnsignedTx,
   useSendFormEstimatedUnsignedTxByteLengthState,
