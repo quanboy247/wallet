@@ -7,10 +7,9 @@ import { Title } from '@app/components/typography';
 import { ContractPreviewLayout } from '@app/pages/transaction-request/components/contract-preview';
 import { AttachmentRow } from '@app/pages/transaction-request/components/attachment-row';
 import { useTransactionRequestState } from '@app/store/transactions/requests.hooks';
-import { WalletBlockchains } from '@shared/models/blockchain.model';
-import { formatContractId } from '@app/common/utils';
 
 import { FunctionArgumentsList } from './function-arguments-list';
+import { formatContractId } from '@app/common/utils';
 
 function ContractCallDetailsSuspense() {
   const transactionRequest = useTransactionRequestState();
@@ -33,12 +32,7 @@ function ContractCallDetailsSuspense() {
       </Title>
 
       <ContractPreviewLayout
-        onClick={() =>
-          handleOpenTxLink({
-            blockchain: WalletBlockchains.stacks,
-            txid: formatContractId(contractAddress, contractName),
-          })
-        }
+        onClick={() => handleOpenTxLink(formatContractId(contractAddress, contractName))}
         contractAddress={contractAddress}
         contractName={contractName}
         functionName={functionName}

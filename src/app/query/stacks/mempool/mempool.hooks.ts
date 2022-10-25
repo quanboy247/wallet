@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import BigNumber from 'bignumber.js';
 import {
   MempoolTokenTransferTransaction,
@@ -19,24 +18,22 @@ function useAccountUnanchoredMempoolTransactions(address: string) {
     tx => tx.tx_status === 'pending' && !droppedCache.has(tx.tx_id)
   );
   const txs = useTransactionsById(results.map(tx => tx.tx_id));
-  return useMemo(() => {
-    return txs
-      .map(tx => tx.data)
-      .filter(tx => {
-        if (typeof tx === 'undefined') return false;
-        if (droppedCache.has(tx.tx_id)) return false;
-        if (tx.tx_status !== 'pending') {
-          // Stale txs persist in the mempool endpoint so we
-          // need to cache dropped txids to prevent unneeded fetches
-          droppedCache.set(tx.tx_id, true);
-          return false;
-        }
-        return true;
-      });
-  }, [txs]);
+  return txs
+    .map(tx => tx.data)
+    .filter(tx => {
+      if (typeof tx === 'undefined') return false;
+      if (droppedCache.has(tx.tx_id)) return false;
+      if (tx.tx_status !== 'pending') {
+        // because stale txs persist in the mempool endpoint
+        // we should cache dropped txids to prevent unneeded fetches
+        droppedCache.set(tx.tx_id, true);
+        return false;
+      }
+      return true;
+    });
 }
 
-export function useStacksPendingTransactions() {
+export function useCurrentAccountFilteredMempoolTransactionsState() {
   const address = useCurrentAccountStxAddressState();
   return useAccountUnanchoredMempoolTransactions(address ?? '').filter(
     tx => !!tx
@@ -49,7 +46,7 @@ export function useCurrentAccountMempool() {
 }
 
 export function useCurrentAccountMempoolTransactionsBalance() {
-  const pendingTransactions = useStacksPendingTransactions();
+  const pendingTransactions = useCurrentAccountFilteredMempoolTransactionsState();
   const tokenTransferTxsBalance = (
     pendingTransactions.filter(
       tx => tx.tx_type === 'token_transfer'

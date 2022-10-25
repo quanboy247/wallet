@@ -1,14 +1,16 @@
 import { useGetAccountNonces } from '@app/query/stacks/nonce/account-nonces.query';
-import { useStacksPendingTransactions } from '@app/query/stacks/mempool/mempool.hooks';
-import { useCurrentAccount } from '@app/store/accounts/account.hooks';
+import { useCurrentAccountFilteredMempoolTransactionsState } from '@app/query/stacks/mempool/mempool.hooks';
+import {
+  useAccountConfirmedTransactions,
+  useCurrentAccount,
+} from '@app/store/accounts/account.hooks';
 
 import { getNextNonce, NonceTypes } from './account-nonces.utils';
-import { useStacksConfirmedTransactions } from '../transactions/transactions-with-transfers.hooks';
 
 export function useNextNonce() {
   const currentAccount = useCurrentAccount();
-  const confirmedTransactions = useStacksConfirmedTransactions();
-  const pendingTransactions = useStacksPendingTransactions();
+  const confirmedTransactions = useAccountConfirmedTransactions();
+  const pendingTransactions = useCurrentAccountFilteredMempoolTransactionsState();
 
   const { data: addressNonces } = useGetAccountNonces();
 

@@ -7,6 +7,7 @@ import {
   transactionNetworkVersionState,
 } from '@app/store/transactions/transaction';
 import {
+  currentAccountConfirmedTransactionsState,
   hasSwitchedAccountsState,
   hasCreatedAccountState,
   accountsWithAddressState,
@@ -16,6 +17,10 @@ import { useTransactionRequestState } from '@app/store/transactions/requests.hoo
 import { useSignatureRequestAccountIndex } from '@app/store/signatures/requests.hooks';
 
 import { AccountWithAddress } from './account.models';
+
+export function useAccountConfirmedTransactions() {
+  return useAtomValue(currentAccountConfirmedTransactionsState);
+}
 
 export function useAccounts() {
   return useAtomValue(accountsWithAddressState);
