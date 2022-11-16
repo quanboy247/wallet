@@ -5,8 +5,8 @@ import { logger } from '@shared/logger';
 import { useBitcoinCryptoCurrencyAssetBalance } from '@app/query/bitcoin/address/address.hooks';
 import { useCurrentAccountBtcAddressState } from '@app/store/accounts/account.hooks';
 
-import { AmountField } from '../send-crypto-asset-form/components/amount-field';
-import { SendAllButton } from '../send-crypto-asset-form/components/send-all-button';
+import { AmountField } from '../../components/amount-field';
+import { SendAllButton } from '../../components/send-all-button';
 
 interface BitcoinCryptoCurrencySendFormProps {}
 export function BitcoinCryptoCurrencySendForm({}: BitcoinCryptoCurrencySendFormProps) {
