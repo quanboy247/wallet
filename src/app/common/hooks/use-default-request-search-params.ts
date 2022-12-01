@@ -1,16 +1,18 @@
 import { useMemo } from 'react';
 
+import { initialParams } from '@shared/initial-params';
 import { isString } from '@shared/utils';
 
-import { useInitialRouteSearchParams } from '@app/store/common/initial-route-search-params.hooks';
-
 export function useDefaultRequestParams() {
-  const params = useInitialRouteSearchParams();
-
   return useMemo(() => {
-    const origin = params.get('origin');
-    const tabId = params.get('tabId');
+    const origin = initialParams.get('origin');
+    const tabId = initialParams.get('tabId');
+    const flow = initialParams.get('flow');
 
-    return { origin, tabId: isString(tabId) ? parseInt(tabId) : tabId };
-  }, [params]);
+    return {
+      origin,
+      flow,
+      tabId: isString(tabId) ? parseInt(tabId) : tabId,
+    };
+  }, []);
 }

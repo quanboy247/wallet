@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useAsync } from 'react-async-hook';
 
+import { initialParams } from '@shared/initial-params';
 import { isString } from '@shared/utils';
 
 import { useDefaultRequestParams } from '@app/common/hooks/use-default-request-search-params';
@@ -10,16 +11,12 @@ import {
 } from '@app/common/signature/requests';
 import { useAccounts } from '@app/store/accounts/account.hooks';
 
-import { useInitialRouteSearchParams } from '../common/initial-route-search-params.hooks';
-
 export function useSignatureRequestSearchParams() {
-  const searchParams = useInitialRouteSearchParams();
   const { origin, tabId } = useDefaultRequestParams();
 
   return useMemo(() => {
-    const requestToken = searchParams.get('request');
-
-    const messageType = searchParams.get('messageType');
+    const requestToken = initialParams.get('request');
+    const messageType = initialParams.get('messageType');
 
     return {
       tabId: isString(tabId) ? parseInt(tabId, 10) : tabId,
@@ -27,7 +24,7 @@ export function useSignatureRequestSearchParams() {
       origin,
       messageType,
     };
-  }, [origin, searchParams, tabId]);
+  }, [origin, tabId]);
 }
 
 function useSignatureRequestState() {

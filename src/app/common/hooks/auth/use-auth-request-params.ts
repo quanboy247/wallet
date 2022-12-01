@@ -2,9 +2,8 @@ import { useMemo } from 'react';
 
 import { decodeToken } from 'jsontokens';
 
+import { initialParams } from '@shared/initial-params';
 import { DecodedAuthRequest } from '@shared/models/decoded-auth-request';
-
-import { useInitialRouteSearchParams } from '@app/store/common/initial-route-search-params.hooks';
 
 import { useDefaultRequestParams } from '../use-default-request-search-params';
 
@@ -30,13 +29,12 @@ function parseAuthRequestValues(authRequest: string | null, origin: string | nul
 }
 
 export function useAuthRequestParams() {
-  const params = useInitialRouteSearchParams();
   const { origin, tabId } = useDefaultRequestParams();
 
   return useMemo(() => {
-    const authRequest = params.get('authRequest');
+    const authRequest = initialParams.get('authRequest');
     const authDetails = parseAuthRequestValues(authRequest, origin);
 
     return { origin, tabId, authRequest, authDetails };
-  }, [origin, params, tabId]);
+  }, [origin, tabId]);
 }
