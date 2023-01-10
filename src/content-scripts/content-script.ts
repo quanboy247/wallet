@@ -47,7 +47,7 @@ window.addEventListener('message', event => {
 const backgroundPort = chrome.runtime.connect({ name: CONTENT_SCRIPT_PORT });
 
 // Sends message to background script that an event has fired
-function sendMessageToBackground(message: LegacyMessageFromContentScript) {
+function sendMessageToBackground(message: any) {
   backgroundPort.postMessage(message);
 }
 
@@ -59,14 +59,17 @@ chrome.runtime.onMessage.addListener((message: LegacyMessageToContentScript) => 
   }
 });
 
-interface ForwardDomEventToBackgroundArgs {
+interface LegacyForwardDomEventToBackgroundArgs {
   payload: string;
   method: LegacyMessageFromContentScript['method'];
   urlParam: string;
   path: RouteUrls;
 }
 
-function forwardDomEventToBackground({ payload, method }: ForwardDomEventToBackgroundArgs) {
+function legacyForwardDomEventToBackground({
+  payload,
+  method,
+}: LegacyForwardDomEventToBackgroundArgs) {
   sendMessageToBackground({
     method,
     payload,
@@ -78,7 +81,7 @@ function forwardDomEventToBackground({ payload, method }: ForwardDomEventToBackg
 document.addEventListener(DomEventName.authenticationRequest, ((
   event: AuthenticationRequestEvent
 ) => {
-  forwardDomEventToBackground({
+  legacyForwardDomEventToBackground({
     path: RouteUrls.Onboarding,
     payload: event.detail.authenticationRequest,
     urlParam: 'authRequest',
@@ -88,7 +91,7 @@ document.addEventListener(DomEventName.authenticationRequest, ((
 
 // Listen for a CustomEvent (transaction request) coming from the web app
 document.addEventListener(DomEventName.transactionRequest, ((event: TransactionRequestEvent) => {
-  forwardDomEventToBackground({
+  legacyForwardDomEventToBackground({
     path: RouteUrls.TransactionRequest,
     payload: event.detail.transactionRequest,
     urlParam: 'request',
@@ -98,7 +101,7 @@ document.addEventListener(DomEventName.transactionRequest, ((event: TransactionR
 
 // Listen for a CustomEvent (signature request) coming from the web app
 document.addEventListener(DomEventName.signatureRequest, ((event: SignatureRequestEvent) => {
-  forwardDomEventToBackground({
+  legacyForwardDomEventToBackground({
     path: RouteUrls.SignatureRequest,
     payload: event.detail.signatureRequest,
     urlParam: 'request',
@@ -110,7 +113,7 @@ document.addEventListener(DomEventName.signatureRequest, ((event: SignatureReque
 document.addEventListener(DomEventName.structuredDataSignatureRequest, ((
   event: SignatureRequestEvent
 ) => {
-  forwardDomEventToBackground({
+  legacyForwardDomEventToBackground({
     path: RouteUrls.SignatureRequest,
     payload: event.detail.signatureRequest,
     urlParam: 'request',
@@ -122,13 +125,36 @@ document.addEventListener(DomEventName.structuredDataSignatureRequest, ((
 document.addEventListener(DomEventName.profileUpdateRequest, ((
   event: ProfileUpdateRequestEvent
 ) => {
-  forwardDomEventToBackground({
+  legacyForwardDomEventToBackground({
     path: RouteUrls.ProfileUpdateRequest,
     payload: event.detail.profileUpdateRequest,
     urlParam: 'request',
     method: ExternalMethods.profileUpdateRequest,
   });
 }) as EventListener);
+
+// RPC Request API
+interface ForwardDomEventToBackgroundArgs {
+  method: string;
+  params: any[];
+  id: string;
+}
+function forwardDomEventToBackground({ params, method, id }: ForwardDomEventToBackgroundArgs) {
+  sendMessageToBackground({
+    source: MESSAGE_SOURCE,
+    method,
+    params,
+    id,
+  });
+}
+document.addEventListener(DomEventName.request, (event: any) => {
+  // console.log('rpc event', event.detail);
+  forwardDomEventToBackground({
+    params: event.detail.params,
+    method: event.detail.method,
+    id: event.detail.id,
+  });
+});
 
 // Inject inpage script (Stacks Provider)
 const inpage = document.createElement('script');

@@ -1,4 +1,5 @@
 import { StacksProvider } from '@stacks/connect';
+import EventEmitter from 'events';
 
 import { BRANCH, COMMIT_SHA } from '@shared/environment';
 import {
@@ -23,7 +24,6 @@ type CallableMethods = keyof typeof ExternalMethods;
 interface ExtensionResponse {
   source: 'blockstack-extension';
   method: CallableMethods;
-
   [key: string]: any;
 }
 
@@ -64,7 +64,13 @@ const isValidEvent = (event: MessageEvent, method: LegacyMessageToContentScript[
   return correctSource && correctMethod && !!data.payload;
 };
 
-const provider: StacksProvider = {
+const eventEmitter = new EventEmitter();
+
+type Provider = StacksProvider & {
+  on(event: 'chainChanged', handler: () => void): void;
+};
+
+const provider: Provider = {
   getURL: async () => {
     const { url } = await callAndReceive('getURL');
     return url;
@@ -191,8 +197,26 @@ const provider: StacksProvider = {
       },
     };
   },
-  request: function (_method: string): Promise<Record<string, any>> {
-    throw new Error('`request` function is not implemented');
+  on(event: string, handler: () => void) {
+    return eventEmitter.on(event, handler);
+  },
+  request: function (method: string, params?: any[]): Promise<Record<string, any>> {
+    return new Promise(resolve => {
+      const requestId = crypto.randomUUID();
+      const handleMessage = (event: MessageEvent<any>) => {
+        if (event.data.id !== requestId) return;
+        window.removeEventListener('message', handleMessage);
+        resolve(event.data);
+      };
+      window.addEventListener('message', handleMessage);
+      const rpcEvent = new CustomEvent<{ method: string; params?: any[]; id: string }>(
+        DomEventName.request,
+        {
+          detail: { method, params, id: requestId },
+        }
+      );
+      document.dispatchEvent(rpcEvent);
+    });
   },
 };
 

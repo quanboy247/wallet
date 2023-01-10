@@ -1,10 +1,18 @@
 import * as Sentry from '@sentry/react';
+import { getStoredState } from 'redux-persist';
 
 import { logger } from '@shared/logger';
-import { CONTENT_SCRIPT_PORT, LegacyMessageFromContentScript } from '@shared/message-types';
+import {
+  CONTENT_SCRIPT_PORT,
+  LegacyMessageFromContentScript,
+  MESSAGE_SOURCE,
+} from '@shared/message-types';
 import { RouteUrls } from '@shared/route-urls';
+import { persistConfig } from '@shared/storage';
 import { initSentry } from '@shared/utils/analytics';
 import { warnUsersAboutDevToolsDangers } from '@shared/utils/dev-tools-warning-log';
+
+import { RootState } from '@app/store';
 
 import { backupOldWalletSalt } from './backup-old-wallet-salt';
 import { initContextMenuActions } from './init-context-menus';
@@ -48,10 +56,18 @@ chrome.runtime.onConnect.addListener(port =>
       if (!originUrl)
         return logger.error('Message reached background script without a corresponding origin');
 
+      console.log(message);
+
       if (isLegacyMessage(message)) {
         void handleLegacyExternalMethodFormat(message, port);
         return;
       }
+
+      if (message.method === 'currentNetwork') {
+        void rpcRequestHandler(message, port);
+      }
+
+      return;
 
       // TODO:
       // Here we'll handle all messages using the rpc style comm method
@@ -59,6 +75,25 @@ chrome.runtime.onConnect.addListener(port =>
     });
   })
 );
+export async function rpcRequestHandler(message: any, port: chrome.runtime.Port) {
+  const { method, id } = message;
+
+  const state = (await getStoredState(persistConfig)) as RootState;
+
+  console.log({ state });
+
+  switch (method) {
+    case 'currentNetwork': {
+      console.log({ tabId: port.sender?.tab?.id });
+      chrome.tabs.sendMessage(port.sender?.tab?.id, {
+        source: MESSAGE_SOURCE,
+        id,
+        network: state.networks.currentNetworkId,
+      });
+      return;
+    }
+  }
+}
 
 //
 // Events from the extension frames script

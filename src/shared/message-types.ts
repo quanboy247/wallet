@@ -16,6 +16,7 @@ export enum ExternalMethods {
   structuredDataSignatureResponse = 'structuredDataSignatureResponse',
   profileUpdateRequest = 'profileUpdateRequest',
   profileUpdateResponse = 'profileUpdateResponse',
+  chainChanged = 'chainChanged',
 }
 
 export enum InternalMethods {
@@ -89,6 +90,8 @@ export type TransactionResponseMessage = Message<
   }
 >;
 
+export type ChainChanged = Message<ExternalMethods.chainChanged, { chain: string }>;
+
 export type LegacyMessageFromContentScript =
   | AuthenticationRequestMessage
   | TransactionRequestMessage
@@ -100,4 +103,5 @@ export type LegacyMessageToContentScript =
   | AuthenticationResponseMessage
   | TransactionResponseMessage
   | SignatureResponseMessage
-  | ProfileUpdateResponseMessage;
+  | ProfileUpdateResponseMessage
+  | ChainChanged;
