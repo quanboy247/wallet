@@ -19,7 +19,7 @@ export function useBitcoinClient() {
     [ChainID.Testnet]: BITCOIN_API_BASE_URL_TESTNET,
   });
 
-  return new BitcoinClient(baseUrl);
+  return useMemo(() => new BitcoinClient(baseUrl), [baseUrl]);
 }
 
 // Unanchored by default (microblocks)

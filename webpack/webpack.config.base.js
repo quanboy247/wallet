@@ -3,7 +3,7 @@ const path = require('path');
 const webpack = require('webpack');
 const { version: _version } = require('../package.json');
 const generateManifest = require('../scripts/generate-manifest');
-
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 const GenerateJsonPlugin = require('generate-json-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -25,6 +25,8 @@ const BRANCH = process.env.GITHUB_REF;
 const IS_DEV = NODE_ENV === 'development';
 const IS_PROD = !IS_DEV;
 const MAIN_BRANCH = 'refs/heads/main';
+
+console.log(IS_DEV);
 
 // For non main branch builds, add a random number
 const getVersionWithRandomSuffix = ref => {
@@ -85,6 +87,7 @@ const config = {
     index: path.join(SRC_ROOT_PATH, 'app', 'index.tsx'),
     'decryption-worker': path.join(SRC_ROOT_PATH, 'shared/workers/decryption-worker.ts'),
     debug: path.join(SRC_ROOT_PATH, '../scripts/debug.js'),
+    bitcoin: path.join(SRC_ROOT_PATH, 'bitcoin.ts'),
   },
   output: {
     path: DIST_ROOT_PATH,
@@ -118,7 +121,7 @@ const config = {
         test: /\.(ts|tsx)$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
+          loader: require.resolve('babel-loader'),
           options: {
             presets: [
               '@babel/preset-typescript',
@@ -193,6 +196,12 @@ const config = {
       title: 'Hiro Wallet—Debugger',
       chunks: ['debug'],
     }),
+    new HtmlWebpackPlugin({
+      template: path.join(SRC_ROOT_PATH, '../', 'public', 'html', 'bitcoin.html'),
+      filename: 'bitcoin.html',
+      title: 'Bitcoin debug',
+      chunks: ['bitcoin'],
+    }),
     new GenerateJsonPlugin(
       'manifest.json',
       generateManifest(VERSION),
@@ -228,6 +237,8 @@ const config = {
     }),
 
     new ProgressBarPlugin(),
+
+    IS_DEV && new ReactRefreshWebpackPlugin(),
   ],
 };
 

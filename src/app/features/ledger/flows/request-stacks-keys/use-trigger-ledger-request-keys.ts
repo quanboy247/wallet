@@ -33,7 +33,7 @@ export function useTriggerLedgerDeviceRequestKeys() {
         // they wanted to pair with Ledger. Here, we kill all in memory keys when
         // a new Ledger wallet is created
         sendMessage({ method: InternalMethods.RemoveInMemoryKeys, payload: undefined });
-        navigate(RouteUrls.Home);
+        // navigate(RouteUrls.Home);
       },
     }),
     [dispatch, navigate]
