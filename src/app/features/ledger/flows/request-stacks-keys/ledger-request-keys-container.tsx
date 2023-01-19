@@ -105,7 +105,7 @@ export function LedgerRequestKeysContainer() {
   };
 
   const pullBitcoinPublicKeysFromDevice = async () => {
-    const bitcoinApp = await connectBitcoinLedgerApp();
+    const { app: bitcoinApp } = await connectBitcoinLedgerApp();
 
     console.log(bjs);
 

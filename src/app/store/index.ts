@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 import { devToolsEnhancer } from '@redux-devtools/remote';
 import { Action, AnyAction, ThunkAction, combineReducers, configureStore } from '@reduxjs/toolkit';
@@ -89,6 +89,8 @@ export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, unk
 type AppDispatch = typeof store.dispatch & ((action: AppThunk) => void);
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
+
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export const storeAtom = atomWithStore(store);
 

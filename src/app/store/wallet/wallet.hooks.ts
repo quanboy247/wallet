@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { useSelector } from 'react-redux';
 
 import {
   createWalletGaiaConfig,
@@ -18,7 +19,7 @@ import { useKeyActions } from '@app/common/hooks/use-key-actions';
 import { useWalletType } from '@app/common/use-wallet-type';
 import { useAccounts } from '@app/store/accounts/account.hooks';
 
-import { encryptedSecretKeyState, secretKeyState, stacksWalletState } from './wallet';
+import { encryptedSecretKeySelector, secretKeyState, stacksWalletState } from './wallet';
 
 export function useStxWalletState() {
   return useAtomValue(stacksWalletState);
@@ -29,7 +30,7 @@ export function useSecretKey() {
 }
 
 export function useEncryptedSecretKeyState() {
-  return useAtomValue(encryptedSecretKeyState);
+  return useSelector(encryptedSecretKeySelector);
 }
 
 export function useFinishSignInCallback() {

@@ -1,3 +1,4 @@
+import { createSelector } from '@reduxjs/toolkit';
 import { Account, Wallet } from '@stacks/wallet-sdk';
 import { atom } from 'jotai';
 
@@ -6,11 +7,11 @@ import { textToBytes } from '@app/common/store-utils';
 import { storeAtom } from '..';
 import { accountsWithAddressState } from '../accounts/accounts';
 import { deriveWalletWithAccounts } from '../chains/stx-chain.selectors';
+import { selectKeysSlice } from '../keys/key.selectors';
 import { defaultKeyId } from '../keys/key.slice';
 
-export const encryptedSecretKeyState = atom(get => {
-  const store = get(storeAtom);
-  const defaultKey = store.keys.entities[defaultKeyId];
+export const encryptedSecretKeySelector = createSelector(selectKeysSlice, state => {
+  const defaultKey = state.entities[defaultKeyId];
   if (!defaultKey || defaultKey.type !== 'software') return;
   return defaultKey.encryptedSecretKey;
 });
@@ -25,7 +26,7 @@ export const secretKeyState = atom(get => {
   return store.inMemoryKeys.keys.default ? textToBytes(store.inMemoryKeys.keys.default) : undefined;
 });
 
-export const ledgerKeyState = atom(async get => {
+export const ledgerKeyState = atom(get => {
   const store = get(storeAtom);
   if (!store.keys.entities.default) return;
   if (store.keys.entities.default.type !== 'ledger') return;
