@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import BitcoinApp from '@ledgerhq/hw-app-btc';
 import Transport from '@ledgerhq/hw-transport-webusb';
 import {
   AddressVersion,
@@ -53,14 +52,9 @@ export interface StxAndIdentityPublicKeys {
   dataPublicKey: string;
 }
 
-async function connectStacksLedgerApp() {
+async function connectLedger() {
   const transport = await Transport.create();
   return new StacksApp(transport as any);
-}
-
-export async function connectBitcoinLedgerApp() {
-  const transport = await Transport.create();
-  return { app: new BitcoinApp({ transport }), transport };
 }
 
 export async function getAppVersion(app: StacksApp) {
@@ -82,7 +76,7 @@ interface PrepareLedgerDeviceConnectionArgs {
 export async function prepareLedgerDeviceConnection(args: PrepareLedgerDeviceConnectionArgs) {
   const { setLoadingState, onError } = args;
   setLoadingState(true);
-  const [error, stacks] = await safeAwait(connectStacksLedgerApp());
+  const [error, stacks] = await safeAwait(connectLedger());
   await delay(1000);
   setLoadingState(false);
 

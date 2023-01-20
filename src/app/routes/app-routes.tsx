@@ -11,7 +11,7 @@ import { EditNonceDrawer } from '@app/features/edit-nonce-drawer/edit-nonce-draw
 import { IncreaseFeeDrawer } from '@app/features/increase-fee-drawer/increase-fee-drawer';
 import { ledgerJwtSigningRoutes } from '@app/features/ledger/flows/jwt-signing/ledger-sign-jwt.routes';
 import { ledgerMessageSigningRoutes } from '@app/features/ledger/flows/message-signing/ledger-sign-msg.routes';
-import { ledgerRequestKeysRoutes } from '@app/features/ledger/flows/request-stacks-keys/ledger-request-keys.routes';
+import { ledgerRequestKeysRoutes } from '@app/features/ledger/flows/request-keys/ledger-request-keys.routes';
 import { ledgerTxSigningRoutes } from '@app/features/ledger/flows/tx-signing/ledger-sign-tx.routes';
 import { ThemesDrawer } from '@app/features/theme-drawer/theme-drawer';
 import { AddNetwork } from '@app/pages/add-network/add-network';

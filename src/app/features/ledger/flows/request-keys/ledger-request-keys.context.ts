@@ -5,16 +5,14 @@ import { noop } from '@shared/utils';
 import { BaseLedgerOperationContext } from '../../ledger-utils';
 
 export interface LedgerRequestKeysContext extends BaseLedgerOperationContext {
-  pullStacksPublicKeysFromDevice(): Promise<void> | void;
-  pullBitcoinPublicKeysFromDevice(): Promise<void> | void;
+  pullPublicKeysFromDevice(): Promise<void> | void;
   outdatedAppVersionWarning: boolean;
 }
 
 export const ledgerRequestKeysContext = createContext<LedgerRequestKeysContext>({
   latestDeviceResponse: null,
   awaitingDeviceConnection: false,
-  pullStacksPublicKeysFromDevice: noop,
-  pullBitcoinPublicKeysFromDevice: noop,
+  pullPublicKeysFromDevice: noop,
   outdatedAppVersionWarning: false,
 });
 

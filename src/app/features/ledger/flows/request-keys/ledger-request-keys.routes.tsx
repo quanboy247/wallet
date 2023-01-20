@@ -9,13 +9,11 @@ import {
   UnsupportedBrowserLayout,
 } from '../../generic-steps';
 import { LedgerRequestKeysContainer } from './ledger-request-keys-container';
-import { ConnectLedgerRequestBitcoinKeys } from './steps/connect-ledger-request-bitcoin-keys';
-import { ConnectLedgerRequestStacksKeys } from './steps/connect-ledger-request-stacks-keys';
+import { ConnectLedgerRequestKeys } from './steps/connect-ledger-request-keys';
 
 export const ledgerRequestKeysRoutes = (
   <Route element={<LedgerRequestKeysContainer />}>
-    <Route path={RouteUrls.ConnectLedger} element={<ConnectLedgerRequestStacksKeys />} />
-    <Route path={'bitcoin'} element={<ConnectLedgerRequestBitcoinKeys />} />
+    <Route path={RouteUrls.ConnectLedger} element={<ConnectLedgerRequestKeys />} />
     <Route path={RouteUrls.DeviceBusy} element={<DeviceBusy />} />
     <Route path={RouteUrls.ConnectLedgerError} element={<ConnectLedgerError />} />
     <Route path={RouteUrls.ConnectLedgerSuccess} element={<ConnectLedgerSuccessLayout />} />
