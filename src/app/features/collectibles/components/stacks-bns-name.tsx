@@ -1,9 +1,11 @@
 import StacksNftBns from '@assets/images/stacks-nft-bns.png';
 
+import { figmaTheme } from '@app/common/utils/figma-theme';
+
 import { CollectibleItemLayout } from './collectible-item.layout';
 
 const backgroundProps = {
-  backgroundColor: '#DCDDE2',
+  backgroundColor: figmaTheme.surfacePressed,
   border: 'transparent',
   borderRadius: '16px',
 };
