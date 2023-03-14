@@ -26,7 +26,8 @@ function bitcoinKeychainSelectorFactory(
   network: NetworkModes
 ) {
   return createSelector(selectCurrentKey, selectInMemoryKey, (currentKey, inMemKey) => {
-    if (currentKey?.type !== 'software') return;
+    if (currentKey?.type !== 'software')
+      throw new Error('Cannot derive keychain in non-software mode');
 
     if (!inMemKey.keys[defaultKeyId]) throw new Error('No in-memory key found');
 

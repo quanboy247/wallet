@@ -34,7 +34,7 @@ export function useGenerateRetrieveTaprootFundsTx() {
       const totalAmount = sumNumbers(uninscribedUtxos.map(utxo => utxo.value));
 
       uninscribedUtxos.forEach(utxo => {
-        const signer = createSigner?.(utxo.addressIndex);
+        const signer = createSigner(utxo.addressIndex);
         if (!signer) return;
 
         tx.addInput({

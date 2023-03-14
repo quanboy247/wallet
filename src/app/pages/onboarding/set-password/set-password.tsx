@@ -11,7 +11,6 @@ import * as yup from 'yup';
 import { RouteUrls } from '@shared/route-urls';
 import { isUndefined } from '@shared/utils';
 
-import { useFinishAuthRequest } from '@app/common/authentication/use-finish-auth-request';
 import { useAnalytics } from '@app/common/hooks/analytics/use-analytics';
 import { useOnboardingState } from '@app/common/hooks/auth/use-onboarding-state';
 import { useKeyActions } from '@app/common/hooks/use-key-actions';
@@ -41,7 +40,6 @@ export const SetPasswordPage = () => {
   const [strengthResult, setStrengthResult] = useState(blankPasswordValidation);
   const wallet = useStacksWallet();
   const { setPassword } = useKeyActions();
-  const finishSignIn = useFinishAuthRequest();
   const navigate = useNavigate();
   const { decodedAuthRequest } = useOnboardingState();
   const analytics = useAnalytics();
@@ -55,20 +53,17 @@ export const SetPasswordPage = () => {
   const submit = useCallback(
     async (password: string) => {
       await setPassword(password);
-
       if (decodedAuthRequest) {
         if (!wallet) return;
         const { accounts } = wallet;
         if (accounts && accounts.length > 1) {
           navigate(RouteUrls.ChooseAccount);
-        } else {
-          await finishSignIn(0);
         }
       } else {
         navigate(RouteUrls.Home);
       }
     },
-    [setPassword, decodedAuthRequest, wallet, navigate, finishSignIn]
+    [setPassword, decodedAuthRequest, wallet, navigate]
   );
 
   const onSubmit = useCallback(

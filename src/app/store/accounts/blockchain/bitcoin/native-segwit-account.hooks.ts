@@ -82,19 +82,22 @@ function useDeriveNativeSegWitAccountIndexAddressIndexZero(xpub: string) {
 
 export function useCurrentBtcNativeSegwitAccountAddressIndexZero() {
   const { xpub } = useCurrentBitcoinNativeSegwitAccount();
-  return useDeriveNativeSegWitAccountIndexAddressIndexZero(xpub)?.address as string;
+  const payment = useDeriveNativeSegWitAccountIndexAddressIndexZero(xpub);
+  if (!payment.address) throw new Error('No address in payment');
+  return payment.address;
 }
 
 export function useBtcNativeSegwitAccountIndexAddressIndexZero(accountIndex: number) {
   const { xpub } = useBitcoinNativeSegwitAccount(accountIndex);
-  return useDeriveNativeSegWitAccountIndexAddressIndexZero(xpub)?.address as string;
+  const payment = useDeriveNativeSegWitAccountIndexAddressIndexZero(xpub);
+  if (!payment.address) throw new Error('No address in payment');
+  return payment.address;
 }
 
 function useCurrentBitcoinNativeSegwitAccountKeychain() {
   const { xpub } = useCurrentBitcoinNativeSegwitAccount();
-  if (!xpub) return; // TODO: Revisit this return early
   const keychain = HDKey.fromExtendedKey(xpub);
-  if (!keychain?.publicKey) throw new Error('No public key for given keychain');
+  if (!keychain.publicKey) throw new Error('No public key for given keychain');
   if (!keychain.pubKeyHash) throw new Error('No pub key hash for given keychain');
   return keychain;
 }
@@ -102,16 +105,14 @@ function useCurrentBitcoinNativeSegwitAccountKeychain() {
 // Concept of current address index won't exist with privacy mode
 export function useCurrentBitcoinNativeSegwitAddressIndexKeychain() {
   const keychain = useCurrentBitcoinNativeSegwitAccountKeychain();
-  if (!keychain) return; // TODO: Revisit this return early
   return deriveAddressIndexZeroFromAccount(keychain);
 }
 
 export function useSignBitcoinNativeSegwitTx() {
   const index = useCurrentAccountIndex();
-  const keychain = useNativeSegWitCurrentNetworkAccountKeychain()?.(index);
+  const keychain = useNativeSegWitCurrentNetworkAccountKeychain()(index);
   return useCallback(
     (tx: btc.Transaction) => {
-      if (isUndefined(keychain)) return;
       tx.sign(deriveAddressIndexZeroFromAccount(keychain).privateKey!);
     },
     [keychain]
@@ -125,7 +126,7 @@ interface UseSignBitcoinNativeSegwitInputAtIndexArgs {
 }
 export function useSignBitcoinNativeSegwitInputAtIndex() {
   const index = useCurrentAccountIndex();
-  const keychain = useNativeSegWitCurrentNetworkAccountKeychain()?.(index);
+  const keychain = useNativeSegWitCurrentNetworkAccountKeychain()(index);
 
   return useCallback(
     ({ allowedSighash, idx, tx }: UseSignBitcoinNativeSegwitInputAtIndexArgs) => {

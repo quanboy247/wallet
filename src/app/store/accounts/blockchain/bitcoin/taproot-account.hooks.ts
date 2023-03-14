@@ -32,7 +32,6 @@ function useTaprootCurrentNetworkAccountKeychain() {
 export function useCurrentTaprootAccountKeychain() {
   const currentAccountIndex = useCurrentAccountIndex();
   const accountKeychain = useTaprootCurrentNetworkAccountKeychain();
-  if (!accountKeychain) return; // TODO: Revisit this return early
   const keychain = accountKeychain(currentAccountIndex);
   if (!keychain) throw new Error('No account keychain found');
   return keychain;
@@ -108,7 +107,6 @@ export function useAllBitcoinTaprootNetworksByAccount() {
 export function useCurrentAccountTaprootSigner() {
   const network = useCurrentNetwork();
   const accountKeychain = useCurrentTaprootAccountKeychain();
-  if (!accountKeychain) return; // TODO: Revisit this return early
   const addressIndexKeychainFn = deriveAddressIndexKeychainFromAccount(accountKeychain);
 
   return (addressIndex: number) => {

@@ -32,13 +32,6 @@ export function Unlock() {
           caption="Enter the password you set on this device"
           onSuccess={handleSuccess}
         />
-        {/* TODO: Add this back when check for matching secret key is ready */}
-        {/* <Caption textAlign="left">
-          Forgot your password? Unlock your account by{' '}
-          <Link display="inline" fontSize={-1} onClick={() => navigate(RouteUrls.SignIn)}>
-            entering your Secret Key.
-          </Link>
-        </Caption> */}
       </Stack>
       <Outlet />
     </CenteredPageContainer>

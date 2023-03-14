@@ -34,9 +34,7 @@ export function deriveNativeSegWitReceiveAddressIndex({
   xpub,
   network,
 }: DeriveNativeSegWitReceiveAddressIndexArgs) {
-  if (!xpub) return;
   const keychain = HDKey.fromExtendedKey(xpub);
-  if (!keychain) return;
   const zeroAddressIndex = deriveAddressIndexZeroFromAccount(keychain);
   return getNativeSegWitAddressIndexDetails(zeroAddressIndex, network);
 }

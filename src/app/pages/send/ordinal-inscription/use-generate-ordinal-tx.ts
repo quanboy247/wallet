@@ -17,7 +17,7 @@ export function useGenerateSignedOrdinalTx(utxo: TaprootUtxo, fee: bigint) {
 
   return useCallback(
     (values: OrdinalSendFormValues) => {
-      const signer = createSigner?.(utxo.addressIndex);
+      const signer = createSigner(utxo.addressIndex);
 
       if (!signer || !feeRate) return;
 
