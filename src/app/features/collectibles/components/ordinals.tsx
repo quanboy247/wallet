@@ -4,6 +4,7 @@ import { RouteUrls } from '@shared/route-urls';
 
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 import { useInscriptionQuery } from '@app/query/bitcoin/ordinals/use-inscription.query';
+import { useNewInscriptionsQuery } from '@app/query/bitcoin/ordinals/use-new-inscriptions.query';
 import { useOrdinalsAwareUtxoQuery } from '@app/query/bitcoin/ordinals/use-ordinals-aware-utxo.query';
 import {
   TaprootUtxo,
@@ -111,6 +112,9 @@ function InscriptionLoader({ utxo, children }: InscriptionLoaderProps) {
 
 export function Ordinals() {
   const { data: utxos = [] } = useTaprootAccountUtxosQuery();
+  const { data: inscriptions } = useNewInscriptionsQuery();
+
+  console.log('ARY inscriptions', inscriptions);
 
   return (
     <>
