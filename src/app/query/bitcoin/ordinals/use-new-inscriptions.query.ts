@@ -1,4 +1,3 @@
-import { bytesToHex } from '@stacks/common';
 import { useQuery } from '@tanstack/react-query';
 import { string } from 'yup';
 
@@ -45,9 +44,10 @@ export function useNewInscriptionsQuery() {
       });
       const address = addressSchema.validateSync(maybeAddress);
 
-      console.log('ARY address', address);
-
       const res = await ordinalsClient.inscriptionsApi.getInscriptionsFromAddresses([address]);
+
+      console.log('ARY address', address);
+      console.log('ARY results:', res.results);
 
       if (!hasInscriptions(res.results)) {
         currentNumberOfAddressesWithoutOrdinals += 1;
