@@ -75,6 +75,8 @@ const aliases = {
   '@stacks/transactions': '@stacks/transactions/dist/esm',
   '@stacks/wallet-sdk': '@stacks/wallet-sdk/dist/esm',
   'lottie-web': path.resolve('node_modules/lottie-web/build/player/lottie_light.js'),
+  'react-native-svg': 'react-native-svg-web',
+  'react-native$': 'react-native-web',
 };
 
 const config = {
@@ -130,7 +132,19 @@ const config = {
                 },
               ],
             ],
-            plugins: ['@emotion', IS_DEV && require.resolve('react-refresh/babel')].filter(Boolean),
+            plugins: [
+              '@emotion',
+              IS_DEV && require.resolve('react-refresh/babel'),
+              [
+                'module-resolver',
+                {
+                  alias: {
+                    '^react-native$': 'react-native-web',
+                  },
+                },
+              ],
+              'react-native-web',
+            ].filter(Boolean),
           },
         },
       },

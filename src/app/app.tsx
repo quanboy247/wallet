@@ -5,6 +5,7 @@ import { HashRouter as Router } from 'react-router-dom';
 
 import { ColorModeProvider as ColorModeProviderLegacy, ThemeProvider } from '@stacks/ui';
 import { QueryClientProvider } from '@tanstack/react-query';
+import { Box, NativeBaseProvider, Text } from 'native-base';
 import { PersistGate } from 'redux-persist/integration/react';
 
 import { queryClient } from '@app/common/persistence';
@@ -28,29 +29,31 @@ export function App() {
   return (
     <Provider store={store}>
       <PersistGate loading={<FullPageLoadingSpinner />} persistor={persistor}>
-        <ThemeProvider theme={theme}>
-          <ThemeSwitcherProvider>
-            <GlobalStyles />
-            <QueryClientProvider client={queryClient}>
-              <ColorModeProvider defaultMode="light">
-                <Suspense fallback={<NewAccountLoadingSpinner />}>
-                  <Router>
-                    <AppErrorBoundary>
-                      <AppRoutes />
-                      <SwitchAccountDrawer />
-                      <SettingsDropdown />
-                    </AppErrorBoundary>
-                    <Toaster
-                      position="bottom-center"
-                      toastOptions={{ style: { fontSize: '14px' } }}
-                    />
-                  </Router>
-                  {reactQueryDevToolsEnabled && <Devtools />}
-                </Suspense>
-              </ColorModeProvider>
-            </QueryClientProvider>
-          </ThemeSwitcherProvider>
-        </ThemeProvider>
+        <NativeBaseProvider>
+          <ThemeProvider theme={theme}>
+            <ThemeSwitcherProvider>
+              <GlobalStyles />
+              <QueryClientProvider client={queryClient}>
+                <ColorModeProvider defaultMode="light">
+                  <Suspense fallback={<NewAccountLoadingSpinner />}>
+                    <Router>
+                      <AppErrorBoundary>
+                        <AppRoutes />
+                        <SwitchAccountDrawer />
+                        <SettingsDropdown />
+                      </AppErrorBoundary>
+                      <Toaster
+                        position="bottom-center"
+                        toastOptions={{ style: { fontSize: '14px' } }}
+                      />
+                    </Router>
+                    {reactQueryDevToolsEnabled && <Devtools />}
+                  </Suspense>
+                </ColorModeProvider>
+              </QueryClientProvider>
+            </ThemeSwitcherProvider>
+          </ThemeProvider>
+        </NativeBaseProvider>
       </PersistGate>
     </Provider>
   );

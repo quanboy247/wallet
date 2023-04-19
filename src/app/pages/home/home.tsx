@@ -1,4 +1,6 @@
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
+
+import { Button } from '@stacks/ui';
 
 import { RouteUrls } from '@shared/route-urls';
 
@@ -48,7 +50,15 @@ function HomeContainer({ account }: HomeContainerProps) {
       currentAccount={<CurrentAccount />}
       actions={<HomeActions />}
     >
-      <HomeTabs balances={<BalancesList address={account.address} />} activity={<ActivityList />} />
+      <HomeTabs
+        balances={
+          <>
+            <Link to="ui-test">UI test page</Link>
+            <BalancesList address={account.address} />
+          </>
+        }
+        activity={<ActivityList />}
+      />
       <Outlet />
     </HomeLayout>
   );

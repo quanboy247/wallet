@@ -43,6 +43,7 @@ import { SendInscriptionSummary } from '@app/pages/send/ordinal-inscription/sent
 import { sendCryptoAssetFormRoutes } from '@app/pages/send/send-crypto-asset-form/send-crypto-asset-form.routes';
 import { SignOutConfirmDrawer } from '@app/pages/sign-out-confirm/sign-out-confirm';
 import { TransactionRequest } from '@app/pages/transaction-request/transaction-request';
+import { UiTest } from '@app/pages/ui-test/ui-test';
 import { UnauthorizedRequest } from '@app/pages/unauthorized-request/unauthorized-request';
 import { Unlock } from '@app/pages/unlock';
 import { ProfileUpdateRequest } from '@app/pages/update-profile-request/update-profile-request';
@@ -260,6 +261,8 @@ function AppRoutesAfterUserHasConsented() {
             </AccountGate>
           }
         />
+
+        <Route path="ui-test" element={<UiTest />} />
 
         {/* Catch-all route redirects to onboarding */}
         <Route path="*" element={<Navigate replace to={RouteUrls.Onboarding} />} />
