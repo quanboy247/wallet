@@ -73,9 +73,10 @@ export function useBtcSendForm() {
             recipient: formRef.current?.values.recipient ?? '',
             utxos,
           })
-        ),
+        ), // take a look at transform here
       recipient: yup
         .string()
+        .trim()
         .concat(btcAddressValidator())
         .concat(btcAddressNetworkValidator(currentNetwork.chain.bitcoin.network))
         .concat(notCurrentAddressValidator(nativeSegwitSigner.address || ''))
@@ -87,7 +88,11 @@ export function useBtcSendForm() {
       formikHelpers: FormikHelpers<BitcoinSendFormValues>
     ) {
       logger.debug('btc form values', values);
+      // check form validation and try see if the trimmed value 
       // Validate and check high fee warning first
+
+
+
       await formikHelpers.validateForm();
 
       whenWallet({

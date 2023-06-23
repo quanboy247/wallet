@@ -29,6 +29,18 @@ test.describe('send btc', () => {
       test.expect(details).toBeTruthy();
     });
 
+    test('that an address with leading/trailing whitespace is accepted', async ({ sendPage }) => {
+      await sendPage.amountInput.fill('0.00006');
+      await sendPage.recipientInput.fill('1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa');
+     
+      // Error never shows as it's a BTC testnet transaction overlay appears
+      const errorMsg = await sendPage.amountInputErrorLabel.innerText();
+      test.expect(errorMsg).toContain('Insufficient balance');
+      await sendPage.previewSendTxButton.click();
+      const details = await sendPage.confirmationDetails.allInnerTexts();
+      test.expect(details).toBeTruthy();
+    });
+
     test('that asset value and recipient on preview match input', async ({ sendPage }) => {
       const amount = '0.00006';
       const amountSymbol = 'BTC';

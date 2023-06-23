@@ -25,7 +25,8 @@ export function btcAddressValidator() {
     .defined(FormErrorMessages.AddressRequired)
     .test((input, context) => {
       if (!input) return false;
-      if (!validate(input))
+      // if (!validate(input))
+      if (!validate(input.trim()))
         return context.createError({
           message: FormErrorMessages.InvalidAddress,
         });
@@ -52,6 +53,7 @@ function btcAddressNetworkValidatorFactory(network: BitcoinNetworkModes) {
 }
 
 export function btcAddressNetworkValidator(network: BitcoinNetworkModes) {
+  console.info('network',network);
   return yup.string().test({
     test: btcAddressNetworkValidatorFactory(network),
     message: FormErrorMessages.IncorrectNetworkAddress,

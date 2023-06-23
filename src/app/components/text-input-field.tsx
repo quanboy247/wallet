@@ -134,6 +134,7 @@ export function TextInputField({
           {...field}
           onBlur={e => {
             onBlur?.();
+            field.value.trim();
             field.onBlur(e);
           }}
         />

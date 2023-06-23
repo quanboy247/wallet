@@ -1,5 +1,6 @@
 import {
   TEST_ACCOUNT_2_STX_ADDRESS,
+  TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS,
   TEST_BNS_NAME,
   TEST_BNS_RESOLVED_ADDRESS,
 } from '@tests/mocks/constants';

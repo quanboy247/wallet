@@ -1,6 +1,7 @@
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 
 import { TextInputField } from '@app/components/text-input-field';
+import { formik } from 'formik';
 
 interface RecipientFieldProps {
   isDisabled?: boolean;
@@ -31,6 +32,7 @@ export function RecipientField({
       minHeight="76px"
       name={name}
       onBlur={onBlur}
+      // onBlur={(event: FocusEvent<HTMLInputElement>) => formik.setFieldValue(event.target.name, event.target.value.trim())}
       onClickLabelAction={onClickLabelAction}
       placeholder={placeholder}
       topInputOverlay={topInputOverlay}
