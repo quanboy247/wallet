@@ -43,10 +43,13 @@ function getTaprootPayment(publicKey: Uint8Array) {
   return btc.p2tr(ecdsaPublicKeyToSchnorr(publicKey), undefined, bitcoinTestnet);
 }
 
+let bareMultiSigLockingScript =
+  '512102dc054e58b755f233295d2a8759a3e4cbf678619d8e75379e7989046dbce16be32102932b35a45d21395ac8bb54b8f9dae3fd2dbc309c24e550cf2211fe6aa897e5ca2102020202020202020202020202020202020202020202020202020202020202020253ae';
+
 function buildTestNativeSegwitPsbtRequest(pubKey: Uint8Array): PsbtRequestOptions {
   const p2wpkh = btc.p2wpkh(pubKey, bitcoinTestnet);
 
-  const tx = new btc.Transaction();
+  const tx = new btc.Transaction({ disableScriptCheck: true });
 
   tx.addInput({
     index: 0,
@@ -64,16 +67,13 @@ function buildTestNativeSegwitPsbtRequest(pubKey: Uint8Array): PsbtRequestOption
       script: p2wpkh.script,
     },
   });
-  tx.addOutput({
-    amount: BigInt(5000),
-    script: p2wpkh.script,
-  });
+  tx.addOutput({ amount: BigInt(796), script: bareMultiSigLockingScript });
 
   const psbt = tx.toPSBT();
 
   // For testing mainnet
-  return { hex: tempHex };
-  // return { hex: bytesToHex(psbt) };
+  // return { hex: tempHex };
+  return { hex: bytesToHex(psbt) };
 }
 
 function buildTestNativeSegwitPsbtRequestWithIndexes(pubKey: Uint8Array): PsbtRequestOptions {

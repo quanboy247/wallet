@@ -4,6 +4,7 @@ import { HDKey, Versions } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
 
 import { BitcoinNetworkModes, NetworkModes } from '@shared/constants';
+import { logger } from '@shared/logger';
 import { whenNetwork } from '@shared/utils';
 
 import { DerivationPathDepth } from '../derivation-path.utils';
@@ -64,24 +65,19 @@ export function decodeBitcoinTx(tx: string) {
 export function getAddressFromOutScript(script: Uint8Array, bitcoinNetwork: BtcSignerNetwork) {
   const outputScript = btc.OutScript.decode(script);
 
-  if (outputScript.type === 'pk' || outputScript.type === 'tr') {
+  if (outputScript.type === 'ms')
+    return btc.p2ms(outputScript.m, outputScript.pubkeys).address ?? '';
+  if (outputScript.type === 'pk')
+    return btc.p2pk(outputScript.pubkey, bitcoinNetwork).address ?? '';
+  if (outputScript.type === 'tr') {
     return btc.Address(bitcoinNetwork).encode({
       type: outputScript.type,
       pubkey: outputScript.pubkey,
     });
   }
-  if (outputScript.type === 'ms' || outputScript.type === 'tr_ms') {
-    return btc.Address(bitcoinNetwork).encode({
-      type: outputScript.type,
-      pubkeys: outputScript.pubkeys,
-      m: outputScript.m,
-    });
-  }
-  if (outputScript.type === 'tr_ns') {
-    return btc.Address(bitcoinNetwork).encode({
-      type: outputScript.type,
-      pubkeys: outputScript.pubkeys,
-    });
+  if (outputScript.type === 'tr_ms' || outputScript.type === 'tr_ns') {
+    logger.error(`Cannot currently handle script type ${outputScript.type}`);
+    return '';
   }
   if (outputScript.type === 'unknown') {
     return btc.Address(bitcoinNetwork).encode({
