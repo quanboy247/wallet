@@ -40,6 +40,7 @@ export function usePsbtSigner() {
           // be the account publicKey
           if (taprootSigner && witnessOutputScript?.type === 'tr' && !input.tapInternalKey) {
             input.tapInternalKey = taprootSigner.payment.tapInternalKey;
+            tx.updateInput(idx, input);
           }
 
           try {
