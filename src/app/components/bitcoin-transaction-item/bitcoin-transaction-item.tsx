@@ -17,11 +17,14 @@ import { useWalletType } from '@app/common/use-wallet-type';
 import { usePressable } from '@app/components/item-hover';
 import { IncreaseFeeButton } from '@app/components/stacks-transaction-item/increase-fee-button';
 import { TransactionTitle } from '@app/components/transaction/transaction-title';
+import { convertInscriptionToSupportedInscriptionType } from '@app/query/bitcoin/ordinals/inscription.hooks';
+import { useGetInscriptionByParamQuery } from '@app/query/bitcoin/ordinals/use-inscription-by-param';
 import { useCurrentAccountNativeSegwitAddressIndexZero } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 
 import { TransactionItemLayout } from '../transaction-item/transaction-item.layout';
 import { BitcoinTransactionCaption } from './bitcoin-transaction-caption';
 import { BitcoinTransactionIcon } from './bitcoin-transaction-icon';
+import { BitcoinTransactionInscriptionIcon } from './bitcoin-transaction-inscription-icon';
 import { BitcoinTransactionStatus } from './bitcoin-transaction-status';
 import { BitcoinTransactionValue } from './bitcoin-transaction-value';
 
@@ -33,6 +36,14 @@ export function BitcoinTransactionItem({ transaction, ...rest }: BitcoinTransact
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { whenWallet } = useWalletType();
+
+  const { data: inscriptionData } = useGetInscriptionByParamQuery(`output=${transaction?.txid}:0`, {
+    select(data) {
+      const inscription = data.results[0];
+      if (!inscription) return;
+      return convertInscriptionToSupportedInscriptionType(inscription);
+    },
+  });
 
   const bitcoinAddress = useCurrentAccountNativeSegwitAddressIndexZero();
   const { handleOpenTxLink } = useExplorerLink();
@@ -67,7 +78,11 @@ export function BitcoinTransactionItem({ transaction, ...rest }: BitcoinTransact
 
   const txCaption = <BitcoinTransactionCaption>{caption}</BitcoinTransactionCaption>;
   const txValue = <BitcoinTransactionValue>{value}</BitcoinTransactionValue>;
-
+  const txIcon = inscriptionData ? (
+    <BitcoinTransactionInscriptionIcon inscription={inscriptionData} />
+  ) : (
+    <BitcoinTransactionIcon transaction={transaction} btcAddress={bitcoinAddress} />
+  );
   const increaseFeeButton = (
     <IncreaseFeeButton
       isEnabled={isEnabled}
@@ -80,7 +95,7 @@ export function BitcoinTransactionItem({ transaction, ...rest }: BitcoinTransact
     <TransactionItemLayout
       openTxLink={openTxLink}
       txCaption={txCaption}
-      txIcon={<BitcoinTransactionIcon transaction={transaction} btcAddress={bitcoinAddress} />}
+      txIcon={txIcon}
       txStatus={<BitcoinTransactionStatus transaction={transaction} />}
       txTitle={<TransactionTitle title="Bitcoin" />}
       txValue={txValue}

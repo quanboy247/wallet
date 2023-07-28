@@ -2,7 +2,8 @@ import { useMemo } from 'react';
 
 import { LoadingSpinner } from '@app/components/loading-spinner';
 import { useBitcoinPendingTransactions } from '@app/query/bitcoin/address/transactions-by-address.hooks';
-import { useGetBitcoinTransactionsByAddressQuery } from '@app/query/bitcoin/address/transactions-by-address.query';
+import { useGetBitcoinTransactionsByAddressesQuery } from '@app/query/bitcoin/address/transactions-by-address.query';
+import { useZeroIndexTaprootAddress } from '@app/query/bitcoin/ordinals/use-zero-index-taproot-address';
 import { useConfigBitcoinEnabled } from '@app/query/common/remote-config/remote-config.query';
 import { useStacksPendingTransactions } from '@app/query/stacks/mempool/mempool.hooks';
 import { useGetAccountTransactionsWithTransfersQuery } from '@app/query/stacks/transactions/transactions-with-transfers.query';
@@ -26,10 +27,23 @@ function useBitcoinAddress() {
 }
 
 export function ActivityList() {
-  const bitcoinAddress = useBitcoinAddress();
-  const { isInitialLoading: isInitialLoadingBitcoinTransactions, data: bitcoinTransactions } =
-    useGetBitcoinTransactionsByAddressQuery(bitcoinAddress);
-  const { data: bitcoinPendingTxs = [] } = useBitcoinPendingTransactions(bitcoinAddress);
+  const nsBitcoinAddress = useBitcoinAddress();
+  const trBitcoinAddress = useZeroIndexTaprootAddress();
+
+  const [
+    { isInitialLoading: isInitialLoadingNsBitcoinTransactions, data: nsBitcoinTransactions = [] },
+    { isInitialLoading: isInitialLoadingTrBitcoinTransactions, data: trBitcoinTransactions = [] },
+  ] = useGetBitcoinTransactionsByAddressesQuery([nsBitcoinAddress, trBitcoinAddress]);
+
+  const [{ data: nsPendingTxs = [] }, { data: trPendingTxs = [] }] = useBitcoinPendingTransactions([
+    nsBitcoinAddress,
+    trBitcoinAddress,
+  ]);
+  const bitcoinPendingTxs = useMemo(
+    () => [...nsPendingTxs, ...trPendingTxs],
+    [nsPendingTxs, trPendingTxs]
+  );
+
   const {
     isInitialLoading: isInitialLoadingStacksTransactions,
     data: stacksTransactionsWithTransfers,
@@ -42,13 +56,14 @@ export function ActivityList() {
   const isBitcoinEnabled = useConfigBitcoinEnabled();
 
   const isInitialLoading =
-    isInitialLoadingBitcoinTransactions ||
+    isInitialLoadingNsBitcoinTransactions ||
+    isInitialLoadingTrBitcoinTransactions ||
     isInitialLoadingStacksTransactions ||
     isInitialLoadingStacksPendingTransactions;
 
   const transactionListBitcoinTxs = useMemo(
-    () => convertBitcoinTxsToListType(bitcoinTransactions),
-    [bitcoinTransactions]
+    () => convertBitcoinTxsToListType([...nsBitcoinTransactions, ...trBitcoinTransactions]),
+    [nsBitcoinTransactions, trBitcoinTransactions]
   );
 
   const pendingTransactionIds = stacksPendingTransactions.map(tx => tx.tx_id);
